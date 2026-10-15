@@ -4,33 +4,24 @@ import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 import { modules } from '../../data/modules';
-import Field from '../../components/Field';
+import ScanField from '../../components/ScanField';
+import WhereScreen from '../modules/where';
 import { colors, font, radius, shadow } from '../../theme';
 
-// Универсальный экран операции (demo): поле скана + накопитель отсканированного.
-// Пока это «полотно» — реальной логики/запросов к бэкенду нет.
+// Экран операции. Для готовых модулей рендерим реальный экран, остальные — пока
+// «полотно» (скан + накопитель), которое добираем модуль за модулем.
+const REAL = {
+  where: WhereScreen,
+};
+
 export default function ModuleScreen() {
   const { key } = useLocalSearchParams();
   const router = useRouter();
   const insets = useSafeAreaInsets();
 
   const mod =
-    modules.find((m) => m.key === key) || {
-      title: 'Модуль',
-      subtitle: '',
-      icon: 'cube-outline',
-      color: colors.primary,
-    };
-
-  const [scan, setScan] = useState('');
-  const [items, setItems] = useState([]);
-
-  const add = () => {
-    const v = scan.trim();
-    if (!v) return;
-    setItems((prev) => [{ id: String(Date.now()), code: v }, ...prev]);
-    setScan('');
-  };
+    modules.find((m) => m.key === key) || { title: 'Модуль', subtitle: '', icon: 'cube-outline', color: colors.primary };
+  const Real = REAL[key];
 
   return (
     <View style={{ flex: 1, backgroundColor: colors.bg }}>
@@ -66,24 +57,39 @@ export default function ModuleScreen() {
         </View>
       </View>
 
-      {/* Поле скана */}
+      {Real ? <Real /> : <StubScan />}
+    </View>
+  );
+}
+
+// Временная заглушка для ещё не портированных модулей: поле скана + накопитель.
+function StubScan() {
+  const insets = useSafeAreaInsets();
+  const [scan, setScan] = useState('');
+  const [showKb, setShowKb] = useState(false);
+  const [items, setItems] = useState([]);
+
+  const add = () => {
+    const v = scan.trim();
+    setScan('');
+    if (!v) return;
+    setItems((prev) => [{ id: String(Date.now()), code: v }, ...prev]);
+  };
+
+  return (
+    <View style={{ flex: 1 }}>
       <View style={{ padding: 16, paddingBottom: 4 }}>
-        <Field
-          label="Сканируйте штрихкод"
+        <ScanField
           value={scan}
           onChangeText={setScan}
-          placeholder="Наведите сканер или введите код"
-          returnKeyType="done"
-          onSubmitEditing={add}
-          right={
-            <Pressable onPress={add} hitSlop={8}>
-              <Ionicons name="add-circle" size={26} color={colors.primary} />
-            </Pressable>
-          }
+          onSubmit={add}
+          showKeyboard={showKb}
+          onToggleKeyboard={() => setShowKb((s) => !s)}
         />
+        <Text style={{ fontFamily: font.regular, fontSize: 12, color: colors.muted, marginTop: 8 }}>
+          Модуль ещё переносится на React Native — пока демонстрационный скан.
+        </Text>
       </View>
-
-      {/* Накопитель сканов */}
       <FlatList
         data={items}
         keyExtractor={(i) => i.id}
@@ -91,25 +97,15 @@ export default function ModuleScreen() {
         ListEmptyComponent={
           <View style={{ alignItems: 'center', paddingTop: 56 }}>
             <MaterialCommunityIcons name="barcode-scan" size={48} color={colors.border} />
-            <Text style={{ fontFamily: font.medium, color: colors.muted, marginTop: 12 }}>
-              Пока пусто — отсканируйте первый код
-            </Text>
+            <Text style={{ fontFamily: font.medium, color: colors.muted, marginTop: 12 }}>Пока пусто — отсканируйте код</Text>
           </View>
         }
         renderItem={({ item, index }) => (
-          <View
-            style={[
-              { backgroundColor: colors.surface, borderRadius: radius.md, padding: 14, flexDirection: 'row', alignItems: 'center', gap: 12 },
-              shadow.card,
-            ]}
-          >
+          <View style={[{ backgroundColor: colors.surface, borderRadius: radius.md, padding: 14, flexDirection: 'row', alignItems: 'center', gap: 12 }, shadow.card]}>
             <View style={{ width: 34, height: 34, borderRadius: 10, backgroundColor: colors.accent + '1A', alignItems: 'center', justifyContent: 'center' }}>
               <Text style={{ fontFamily: font.bold, color: colors.primary }}>{items.length - index}</Text>
             </View>
             <Text style={{ fontFamily: font.mono, fontSize: 14, color: colors.ink, flex: 1 }}>{item.code}</Text>
-            <View style={{ backgroundColor: colors.accent + '1A', borderRadius: 999, paddingHorizontal: 10, paddingVertical: 4 }}>
-              <Text style={{ fontFamily: font.semibold, fontSize: 11, color: colors.primary }}>принят</Text>
-            </View>
           </View>
         )}
       />

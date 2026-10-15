@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react';
 import { View, ActivityIndicator } from 'react-native';
 import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
@@ -11,9 +12,11 @@ import {
 } from '@expo-google-fonts/golos-text';
 import { MartianMono_500Medium } from '@expo-google-fonts/martian-mono';
 import { colors } from '../theme';
+import { initStorage } from '../lib/storage';
+import { initCellVoiceMode } from '../lib/cells';
 
-// Корневой layout: грузит шрифты Golos Text / Martian Mono и оборачивает
-// все экраны в навигационный Stack. Пока шрифты не загрузились — заставка.
+// Корневой layout: грузит шрифты + вход/настройки из хранилища, оборачивает экраны
+// в навигационный Stack. Пока не готово — заставка.
 export default function RootLayout() {
   const [fontsLoaded] = useFonts({
     GolosText_400Regular,
@@ -22,8 +25,17 @@ export default function RootLayout() {
     GolosText_700Bold,
     MartianMono_500Medium,
   });
+  const [storageReady, setStorageReady] = useState(false);
 
-  if (!fontsLoaded) {
+  useEffect(() => {
+    (async () => {
+      await initStorage();
+      await initCellVoiceMode();
+      setStorageReady(true);
+    })();
+  }, []);
+
+  if (!fontsLoaded || !storageReady) {
     return (
       <View style={{ flex: 1, backgroundColor: colors.brand, alignItems: 'center', justifyContent: 'center' }}>
         <ActivityIndicator color={colors.accent} size="large" />
