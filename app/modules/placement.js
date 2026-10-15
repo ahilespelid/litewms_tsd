@@ -6,6 +6,7 @@ import ScreenHeader from '../../components/ScreenHeader';
 import ScanField from '../../components/ScanField';
 import QtyPad from '../../components/QtyPad';
 import BasketList from '../../components/BasketList';
+import MoveScreen from './move';
 import { api } from '../../lib/api';
 import { speak, formatCellSpeech } from '../../lib/cells';
 import { useScanDedup } from '../../lib/scanner';
@@ -456,10 +457,7 @@ export default function PlacementScreen({ mod }) {
       </View>
 
       {tab === 'move' ? (
-        <View style={{ padding: 24, alignItems: 'center', gap: 8 }}>
-          <Text style={{ fontFamily: font.semibold, fontSize: 15, color: colors.ink, textAlign: 'center' }}>Перемещение между ячейками</Text>
-          <Text style={{ fontFamily: font.regular, fontSize: 13, color: colors.muted, textAlign: 'center' }}>Модуль переносится на React Native следующим шагом.</Text>
-        </View>
+        <MoveScreen embedded />
       ) : tab === 'look' ? (
         <LookTab
           scan={scan} setScan={setScan} showKb={showKb} setShowKb={setShowKb} scanRef={scanRef}
@@ -690,5 +688,6 @@ const submitBtn = { minHeight: 52, borderRadius: radius.md, backgroundColor: col
 const submitTxt = { fontFamily: font.bold, fontSize: 16, color: '#fff' };
 const sheetBackdrop = { flex: 1, backgroundColor: 'rgba(10,20,20,0.45)', justifyContent: 'flex-end' };
 const sheetBody = { backgroundColor: colors.bg, borderTopLeftRadius: 18, borderTopRightRadius: 18, padding: 16, gap: 10 };
+const pickRow = { flexDirection: 'row', alignItems: 'center', gap: 10, backgroundColor: colors.surface, borderWidth: 1, borderColor: colors.border, borderRadius: radius.md, padding: 10 };
 const statTxt = { fontFamily: font.regular, fontSize: 12, color: colors.muted };
 const statNum = { fontFamily: font.bold, color: colors.ink };
