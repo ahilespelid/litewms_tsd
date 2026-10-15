@@ -8,6 +8,7 @@ import ScanField from '../../components/ScanField';
 import ScreenHeader from '../../components/ScreenHeader';
 import WhereScreen from '../modules/where';
 import InventoryScreen from '../modules/inventory';
+import PlacementScreen from '../modules/placement';
 import { colors, font, radius, shadow } from '../../theme';
 
 // Экран операции. Готовые модули — ПОЛНОЭКРАННЫЕ: каждый сам рисует свою шапку
@@ -16,6 +17,7 @@ import { colors, font, radius, shadow } from '../../theme';
 const REAL = {
   where: WhereScreen,
   inventory: InventoryScreen,
+  placement: PlacementScreen,
 };
 
 export default function ModuleScreen() {
