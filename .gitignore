@@ -1,0 +1,31 @@
+# Зависимости
+node_modules/
+
+# Expo
+.expo/
+dist/
+web-build/
+expo-env.d.ts
+
+# Нативные сборки
+*.apk
+*.aab
+*.ipa
+
+# Служебное (Claude Code / IDE)
+.claude/
+
+# Логи / мусор
+*.log
+npm-debug.*
+yarn-debug.*
+yarn-error.*
+.DS_Store
+
+# Секреты / ключи подписи
+.env*.local
+*.jks
+*.p8
+*.p12
+*.key
+*.mobileprovision

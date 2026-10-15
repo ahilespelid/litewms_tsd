@@ -1,0 +1,24 @@
+{
+  "expo": {
+    "name": "LiteWMS ТСД",
+    "slug": "litewms-tsd",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "scheme": "litewmstsd",
+    "userInterfaceStyle": "light",
+    "android": {
+      "package": "ru.litewms.tsd"
+    },
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "ru.litewms.tsd"
+    },
+    "web": {
+      "bundler": "metro"
+    },
+    "plugins": [
+      "expo-router",
+      "expo-font"
+    ]
+  }
+}
