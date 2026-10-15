@@ -14,6 +14,8 @@ import { MartianMono_500Medium } from '@expo-google-fonts/martian-mono';
 import { colors } from '../theme';
 import { initStorage } from '../lib/storage';
 import { initCellVoiceMode } from '../lib/cells';
+import { initFbsSettings } from '../lib/fbsSettings';
+import { initPicks } from '../lib/picks';
 
 // Корневой layout: грузит шрифты + вход/настройки из хранилища, оборачивает экраны
 // в навигационный Stack. Пока не готово — заставка.
@@ -30,7 +32,7 @@ export default function RootLayout() {
   useEffect(() => {
     (async () => {
       await initStorage();
-      await initCellVoiceMode();
+      await Promise.all([initCellVoiceMode(), initFbsSettings(), initPicks()]);
       setStorageReady(true);
     })();
   }, []);
