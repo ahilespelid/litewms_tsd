@@ -9,6 +9,7 @@ import ScreenHeader from '../../components/ScreenHeader';
 import WhereScreen from '../modules/where';
 import InventoryScreen from '../modules/inventory';
 import PlacementScreen from '../modules/placement';
+import PriemkaScreen from '../modules/priemka';
 import { colors, font, radius, shadow } from '../../theme';
 
 // Экран операции. Готовые модули — ПОЛНОЭКРАННЫЕ: каждый сам рисует свою шапку
@@ -18,6 +19,7 @@ const REAL = {
   where: WhereScreen,
   inventory: InventoryScreen,
   placement: PlacementScreen,
+  priemka: PriemkaScreen,
 };
 
 export default function ModuleScreen() {
