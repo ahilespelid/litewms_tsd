@@ -4,6 +4,7 @@ import { useRouter } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import ScreenHeader from '../../components/ScreenHeader';
 import ScanField from '../../components/ScanField';
+import FbsMarksScreen from './fbsMarks';
 import { api } from '../../lib/api';
 import { speak, formatCellSpeech, getCellVoiceMode } from '../../lib/cells';
 import { useScanDedup } from '../../lib/scanner';
@@ -122,7 +123,14 @@ const SGTIN_BATCH_SIZE = 20;
 const SGTIN_IDLE_MS = 900;
 const POLL_MS = 30000;
 
+// Обёртка: держит выбранный маркетплейс и переключает WB ↔ Ozon/Яндекс.
 export default function FbsScreen({ mod }) {
+  const [market, setMarket] = useState('wb');
+  if (market === 'ozon' || market === 'yandex') return <FbsMarksScreen market={market} onMarket={setMarket} />;
+  return <WbFbs mod={mod} onMarket={setMarket} />;
+}
+
+function WbFbs({ mod, onMarket }) {
   const router = useRouter();
   const insets = useSafeAreaInsets();
   const scanRef = useRef(null);
@@ -130,7 +138,6 @@ export default function FbsScreen({ mod }) {
   const [, force] = useState(0);
   const rerender = useCallback(() => force((n) => (n + 1) % 1e9), []);
 
-  const [market] = useState('wb'); // Ozon/Яндекс — отдельным шагом
   const [step, setStep] = useState('companies'); // companies | supplies | work
   const [mode, setMode] = useState('sborka');     // sborka | otbor
   const [loading, setLoading] = useState(false);
@@ -833,8 +840,8 @@ export default function FbsScreen({ mod }) {
         <ScrollView contentContainerStyle={{ padding: 12, paddingBottom: insets.bottom + 24, gap: 8 }}>
           <View style={segWrap}>
             <View style={[segBtn, segOn]}><Text style={[segTxt, segTxtOn]}>WB</Text></View>
-            <Pressable style={segBtn} onPress={() => Alert.alert('Ozon ФБС', 'Переносится на React Native следующим шагом.')}><Text style={segTxt}>Ozon</Text></Pressable>
-            <Pressable style={segBtn} onPress={() => Alert.alert('Яндекс ФБС', 'Переносится на React Native следующим шагом.')}><Text style={segTxt}>Яндекс</Text></Pressable>
+            <Pressable style={segBtn} onPress={() => onMarket && onMarket('ozon')}><Text style={segTxt}>Ozon</Text></Pressable>
+            <Pressable style={segBtn} onPress={() => onMarket && onMarket('yandex')}><Text style={segTxt}>Яндекс</Text></Pressable>
           </View>
           <TextInput value={companyQuery} onChangeText={setCompanyQuery} placeholder="Поиск по имени…" placeholderTextColor={colors.muted} style={fieldStyle} />
           {filteredCompanies.map((c) => (
