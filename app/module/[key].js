@@ -1,63 +1,36 @@
 import { useState } from 'react';
-import { View, Text, FlatList, Pressable } from 'react-native';
-import { useLocalSearchParams, useRouter } from 'expo-router';
+import { View, Text, FlatList } from 'react-native';
+import { useLocalSearchParams } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { modules } from '../../data/modules';
 import ScanField from '../../components/ScanField';
+import ScreenHeader from '../../components/ScreenHeader';
 import WhereScreen from '../modules/where';
+import InventoryScreen from '../modules/inventory';
 import { colors, font, radius, shadow } from '../../theme';
 
-// Экран операции. Для готовых модулей рендерим реальный экран, остальные — пока
-// «полотно» (скан + накопитель), которое добираем модуль за модулем.
+// Экран операции. Готовые модули — ПОЛНОЭКРАННЫЕ: каждый сам рисует свою шапку
+// (ScreenHeader), т.к. ему нужны своя кнопка «назад» (шаги), подзаголовок и
+// действие справа. Остальные — общая шапка + «полотно» (скан + накопитель).
 const REAL = {
   where: WhereScreen,
+  inventory: InventoryScreen,
 };
 
 export default function ModuleScreen() {
   const { key } = useLocalSearchParams();
-  const router = useRouter();
-  const insets = useSafeAreaInsets();
 
   const mod =
     modules.find((m) => m.key === key) || { title: 'Модуль', subtitle: '', icon: 'cube-outline', color: colors.primary };
   const Real = REAL[key];
 
+  if (Real) return <Real mod={mod} />;
+
   return (
     <View style={{ flex: 1, backgroundColor: colors.bg }}>
-      {/* Шапка модуля */}
-      <View
-        style={{
-          backgroundColor: colors.brand,
-          paddingTop: insets.top + 12,
-          paddingBottom: 18,
-          paddingHorizontal: 16,
-          flexDirection: 'row',
-          alignItems: 'center',
-          gap: 12,
-          borderBottomLeftRadius: 22,
-          borderBottomRightRadius: 22,
-        }}
-      >
-        <Pressable
-          onPress={() => router.back()}
-          hitSlop={10}
-          style={{ width: 40, height: 40, borderRadius: 20, backgroundColor: '#ffffff14', alignItems: 'center', justifyContent: 'center' }}
-        >
-          <Ionicons name="chevron-back" size={22} color={colors.onDark} />
-        </Pressable>
-        <View style={{ width: 40, height: 40, borderRadius: 12, backgroundColor: '#ffffff14', alignItems: 'center', justifyContent: 'center' }}>
-          <MaterialCommunityIcons name={mod.icon} size={22} color={colors.accent} />
-        </View>
-        <View style={{ flex: 1 }}>
-          <Text style={{ fontFamily: font.bold, color: colors.onDark, fontSize: 18 }}>{mod.title}</Text>
-          {mod.subtitle ? (
-            <Text style={{ fontFamily: font.regular, color: colors.onDarkMuted, fontSize: 12 }}>{mod.subtitle}</Text>
-          ) : null}
-        </View>
-      </View>
-
-      {Real ? <Real /> : <StubScan />}
+      <ScreenHeader title={mod.title} subtitle={mod.subtitle} />
+      <StubScan />
     </View>
   );
 }
@@ -73,7 +46,7 @@ function StubScan() {
     const v = scan.trim();
     setScan('');
     if (!v) return;
-    setItems((prev) => [{ id: String(Date.now()), code: v }, ...prev]);
+    setItems((prev) => [{ id: String(prev.length + 1) + '-' + v, code: v }, ...prev]);
   };
 
   return (

@@ -1,8 +1,10 @@
 import { useState, useCallback } from 'react';
 import { View, Text, ScrollView } from 'react-native';
+import { useRouter } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import ScanField from '../../components/ScanField';
+import ScreenHeader from '../../components/ScreenHeader';
 import { api } from '../../lib/api';
 import { formatCellSpeech, speak } from '../../lib/cells';
 import { useScanDedup } from '../../lib/scanner';
@@ -10,7 +12,8 @@ import { colors, font, radius, shadow } from '../../theme';
 
 // «Где лежит»: скан ШК → GET /api/cells/scan?code= → ячейки товара + голос адреса.
 // Первый реальный модуль RN-версии — проверяет весь фундамент: api + сканер + голос.
-export default function WhereScreen() {
+export default function WhereScreen({ mod }) {
+  const router = useRouter();
   const insets = useSafeAreaInsets();
   const [scan, setScan] = useState('');
   const [showKb, setShowKb] = useState(false);
@@ -52,7 +55,8 @@ export default function WhereScreen() {
   }, [scan, isDup]);
 
   return (
-    <View style={{ flex: 1 }}>
+    <View style={{ flex: 1, backgroundColor: colors.bg }}>
+      <ScreenHeader title={mod?.title || 'Где лежит'} subtitle={mod?.subtitle} onBack={() => router.back()} />
       <View style={{ padding: 16, gap: 12 }}>
         <ScanField
           value={scan}
