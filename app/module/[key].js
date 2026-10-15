@@ -11,6 +11,7 @@ import InventoryScreen from '../modules/inventory';
 import PlacementScreen from '../modules/placement';
 import PriemkaScreen from '../modules/priemka';
 import FbsScreen from '../modules/fbs';
+import RequestsScreen from '../modules/requests';
 import { colors, font, radius, shadow } from '../../theme';
 
 // Экран операции. Готовые модули — ПОЛНОЭКРАННЫЕ: каждый сам рисует свою шапку
@@ -22,6 +23,7 @@ const REAL = {
   placement: PlacementScreen,
   priemka: PriemkaScreen,
   fbs: FbsScreen,
+  requests: RequestsScreen,
 };
 
 export default function ModuleScreen() {
