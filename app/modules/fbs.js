@@ -1113,7 +1113,7 @@ function Badge({ text, kind }) {
   return <View style={{ backgroundColor: bg, borderRadius: 999, paddingHorizontal: 10, paddingVertical: 4 }}><Text style={{ fontFamily: font.bold, fontSize: 11, color: fg }}>{text}</Text></View>;
 }
 function Chip({ text, kind }) {
-  const map = { pending: [colors.accent + '22', colors.primary], scanned: [colors.success + '22', colors.primary], rejected: [colors.danger + '22', colors.danger], cell: [colors.primary + '14', colors.primary], box: [colors.warning + '22', colors.warning] };
+  const map = { pending: [colors.cz + '22', colors.cz], scanned: [colors.success + '22', colors.success], rejected: [colors.danger + '22', colors.danger], cell: [colors.primary + '14', colors.primary], box: [colors.warning + '22', colors.warning] };
   const [bg, fg] = map[kind] || [colors.border, colors.muted];
   return <View style={{ backgroundColor: bg, borderRadius: 6, paddingHorizontal: 7, paddingVertical: 2 }}><Text style={{ fontFamily: font.semibold, fontSize: 10, color: fg }}>{text}</Text></View>;
 }

@@ -11,13 +11,17 @@ export default function ScreenHeader({ title, subtitle, onBack, right }) {
       style={{
         backgroundColor: colors.brand,
         paddingTop: insets.top + 12,
-        paddingBottom: 16,
+        paddingBottom: 14,
         paddingHorizontal: 16,
         flexDirection: 'row',
         alignItems: 'center',
-        gap: 12,
-        borderBottomLeftRadius: 22,
-        borderBottomRightRadius: 22,
+        gap: 10,
+        // Плоская липкая шапка, как в premium.css (без скругления низа), мягкая тень.
+        shadowColor: '#006666',
+        shadowOpacity: 0.2,
+        shadowRadius: 8,
+        shadowOffset: { width: 0, height: 2 },
+        elevation: 4,
       }}
     >
       <Pressable

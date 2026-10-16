@@ -77,8 +77,6 @@ export default function Login() {
             paddingTop: insets.top + 40,
             paddingBottom: 44,
             paddingHorizontal: 24,
-            borderBottomLeftRadius: 28,
-            borderBottomRightRadius: 28,
             overflow: 'hidden',
           }}
         >

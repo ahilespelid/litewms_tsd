@@ -20,8 +20,6 @@ export default function Home() {
           paddingTop: insets.top + 16,
           paddingBottom: 22,
           paddingHorizontal: 20,
-          borderBottomLeftRadius: 24,
-          borderBottomRightRadius: 24,
         }}
       >
         <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }}>
