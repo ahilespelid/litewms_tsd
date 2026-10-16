@@ -615,7 +615,7 @@ export default function PriemkaScreen({ mod }) {
           {sortedRows.map((r) => {
             const full = r.accepted >= r.need;
             return (
-              <Pressable key={`${r.linkId ?? ''}-${r.productId ?? ''}-${r.barcode}`} onPress={() => openRow(r, true)} style={[posCard, full && { opacity: 0.6 }]}>
+              <Pressable key={`${r.linkId ?? ''}-${r.productId ?? ''}-${r.barcode}`} onPress={() => openRow(r, true)} style={[posCard, full && { backgroundColor: colors.successBg, borderColor: colors.successLine }]}>
                 <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 6 }}>
                   <Text style={{ fontFamily: font.bold, fontSize: 14, color: full ? colors.success : colors.ink }}>{r.accepted}/{r.need} шт{submitted || r.placed ? <Text style={{ fontFamily: font.regular, fontSize: 11, color: colors.muted }}> · в ячейках {r.placed}</Text> : null}</Text>
                   <Text style={{ fontSize: 16, color: full ? colors.success : colors.muted }}>{full ? '✓' : '○'}</Text>
@@ -624,7 +624,7 @@ export default function PriemkaScreen({ mod }) {
                   {photoOf(r) ? <Pressable onPress={() => setLightbox(photoOf(r))}><Image source={{ uri: photoOf(r) }} style={thumb} /></Pressable> : null}
                   <Text style={{ flex: 1, fontFamily: font.semibold, fontSize: 14, color: colors.ink }} numberOfLines={2}>{r.name || '—'}</Text>
                   <View style={{ alignItems: 'flex-end' }}>
-                    {itemSize(r) ? <Text style={{ fontFamily: font.medium, fontSize: 11, color: colors.muted }}>Размер {itemSize(r)}</Text> : null}
+                    {itemSize(r) ? <Text style={{ fontFamily: font.bold, fontSize: 11, color: '#6d28d9', backgroundColor: '#ede9fe', borderRadius: radius.pill, paddingHorizontal: 9, paddingVertical: 2, overflow: 'hidden' }}>Размер {itemSize(r)}</Text> : null}
                     {r.barcode ? <Text style={{ fontFamily: font.regular, fontSize: 11, color: colors.muted }}>ШК {shkHead(r.barcode)}<Text style={{ fontFamily: font.bold, color: colors.ink }}>{shkTail(r.barcode)}</Text></Text> : null}
                     {itemArt(r) ? <Text style={{ fontFamily: font.regular, fontSize: 10, color: colors.muted }}>арт {itemArt(r)}</Text> : null}
                   </View>
@@ -764,7 +764,7 @@ const segOn = { backgroundColor: colors.surface, ...shadow.card };
 const segTxt = { fontFamily: font.bold, fontSize: 13, color: colors.muted };
 const segTxtSub = { fontFamily: font.semibold, fontSize: 12, color: colors.muted };
 const segTxtOn = { color: colors.primary };
-const submitBtn = { minHeight: 52, borderRadius: radius.md, backgroundColor: colors.primary, alignItems: 'center', justifyContent: 'center', paddingHorizontal: 16 };
+const submitBtn = { minHeight: 52, borderRadius: radius.md, backgroundColor: colors.primary, alignItems: 'center', justifyContent: 'center', paddingHorizontal: 16, shadowColor: '#006666', shadowOpacity: 0.22, shadowRadius: 12, shadowOffset: { width: 0, height: 4 }, elevation: 4 };
 const submitTxt = { fontFamily: font.bold, fontSize: 16, color: '#fff' };
 const outlineBtn = { minHeight: 52, borderRadius: radius.md, borderWidth: 1, borderColor: colors.border, alignItems: 'center', justifyContent: 'center' };
 const outlineTxt = { fontFamily: font.semibold, fontSize: 15, color: colors.ink };

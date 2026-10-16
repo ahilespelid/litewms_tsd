@@ -212,7 +212,7 @@ export default function OtborView({ request, onBack }) {
       {loading ? <ActivityIndicator color={colors.primary} style={{ marginTop: 16 }} /> : (
         <ScrollView keyboardShouldPersistTaps="handled" contentContainerStyle={{ paddingHorizontal: 12, paddingBottom: insets.bottom + 24, gap: 6 }}>
           {sortedRows.map((r) => { const done = isDone(r); return (
-            <Pressable key={r.link_id} onPress={() => selectRow(r)} style={[planRow, done && { opacity: 0.55 }, activeRow?.link_id === r.link_id && { borderColor: colors.primary }]}>
+            <Pressable key={r.link_id} onPress={() => selectRow(r)} style={[planRow, done && { backgroundColor: colors.successBg, borderColor: colors.successLine }, activeRow?.link_id === r.link_id && { borderColor: colors.primary }]}>
               <View style={{ flexDirection: 'row', gap: 10, alignItems: 'center' }}>
                 {photoOf(r) ? <Pressable onPress={() => setLightbox({ src: photoOf(r), name: r.name })}><Image source={{ uri: photoOf(r) }} style={thumb} /></Pressable> : null}
                 <View style={{ flex: 1 }}>
@@ -243,7 +243,7 @@ function Banner({ kind, text }) { const err = kind === 'error'; return <View sty
 const hintTxt = { fontFamily: font.regular, fontSize: 13, color: colors.muted, paddingVertical: 6 };
 const planRow = { backgroundColor: colors.surface, borderWidth: 1, borderColor: colors.border, borderRadius: radius.md, padding: 10 };
 const thumb = { width: 46, height: 46, borderRadius: 8, backgroundColor: colors.bg };
-const submitBtn = { minHeight: 50, borderRadius: radius.md, backgroundColor: colors.primary, alignItems: 'center', justifyContent: 'center', paddingHorizontal: 16 };
+const submitBtn = { minHeight: 50, borderRadius: radius.md, backgroundColor: colors.primary, alignItems: 'center', justifyContent: 'center', paddingHorizontal: 16, shadowColor: '#006666', shadowOpacity: 0.22, shadowRadius: 12, shadowOffset: { width: 0, height: 4 }, elevation: 4 };
 const submitTxt = { fontFamily: font.bold, fontSize: 16, color: '#fff' };
 const outlineBtn = { minHeight: 50, borderRadius: radius.md, borderWidth: 1, borderColor: colors.border, alignItems: 'center', justifyContent: 'center' };
 const outlineTxt = { fontFamily: font.semibold, fontSize: 15, color: colors.ink };

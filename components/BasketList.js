@@ -63,9 +63,9 @@ export default function BasketList({ lines = [], editable = true, showPlaces = f
                 onPress={() => onEdit && onEdit(l.product_id)}
                 onLongPress={() => l.max != null && onFill && onFill(l.product_id)}
                 delayLongPress={1000}
-                style={{ minWidth: 46, paddingHorizontal: 8, paddingVertical: 8, borderRadius: radius.sm, backgroundColor: colors.bg, alignItems: 'center' }}
+                style={{ minWidth: 46, paddingHorizontal: 8, paddingVertical: 8, borderRadius: radius.sm, borderWidth: 1, borderColor: colors.primary, backgroundColor: colors.primaryLight, alignItems: 'center' }}
               >
-                <Text style={{ fontFamily: font.bold, fontSize: 18, color: colors.ink }}>
+                <Text style={{ fontFamily: font.bold, fontSize: 18, color: colors.primary }}>
                   {l.qty}
                   {l.max != null ? <Text style={{ fontFamily: font.medium, fontSize: 12, color: colors.muted }}>/{l.max}</Text> : null}
                 </Text>

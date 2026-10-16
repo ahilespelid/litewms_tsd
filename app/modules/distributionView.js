@@ -353,7 +353,7 @@ export default function DistributionView({ request, onBack }) {
           {/* план */}
           <Text style={sectionTxt}>План города · осталось {totalLeft}</Text>
           {plan.map((p) => { const left = leftQty(p); const done = doneQty(p); return (
-            <View key={String(p.product_id)} style={[planRow, left === 0 && { opacity: 0.55 }]}>
+            <View key={String(p.product_id)} style={[planRow, left === 0 && { backgroundColor: colors.successBg, borderColor: colors.successLine }]}>
               <View style={{ flexDirection: 'row', gap: 10, alignItems: 'center' }}>
                 {photoOf(p) ? <Pressable onPress={() => setLightbox({ src: photoOf(p), name: p.name })}><Image source={{ uri: photoOf(p) }} style={thumb} /></Pressable> : null}
                 <View style={{ flex: 1 }}>
@@ -426,8 +426,10 @@ export default function DistributionView({ request, onBack }) {
 
 function Toggle({ on, label, onPress }) {
   return (
-    <Pressable onPress={onPress} style={{ flexDirection: 'row', alignItems: 'center', gap: 6 }}>
-      <View style={{ width: 20, height: 20, borderRadius: 5, borderWidth: 1.5, borderColor: on ? colors.primary : colors.border, backgroundColor: on ? colors.primary : 'transparent', alignItems: 'center', justifyContent: 'center' }}>{on ? <Text style={{ color: '#fff', fontSize: 13 }}>✓</Text> : null}</View>
+    <Pressable onPress={onPress} style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
+      <View style={{ width: 44, height: 26, borderRadius: 999, backgroundColor: on ? colors.primary : colors.borderStrong, justifyContent: 'center', paddingHorizontal: 3 }}>
+        <View style={{ width: 20, height: 20, borderRadius: 10, backgroundColor: '#fff', alignSelf: on ? 'flex-end' : 'flex-start', shadowColor: '#0f2b2b', shadowOpacity: 0.2, shadowRadius: 2, shadowOffset: { width: 0, height: 1 }, elevation: 2 }} />
+      </View>
       <Text style={{ fontFamily: font.medium, fontSize: 12, color: colors.muted }}>{label}</Text>
     </Pressable>
   );
@@ -437,7 +439,7 @@ function Banner({ kind, text }) { const err = kind === 'error'; return <View sty
 const sectionTxt = { fontFamily: font.semibold, fontSize: 11, textTransform: 'uppercase', letterSpacing: 0.5, color: colors.muted, marginTop: 4 };
 const planRow = { backgroundColor: colors.surface, borderWidth: 1, borderColor: colors.border, borderRadius: radius.md, padding: 10 };
 const thumb = { width: 46, height: 46, borderRadius: 8, backgroundColor: colors.bg };
-const submitBtn = { minHeight: 50, borderRadius: radius.md, backgroundColor: colors.primary, alignItems: 'center', justifyContent: 'center', paddingHorizontal: 16 };
+const submitBtn = { minHeight: 50, borderRadius: radius.md, backgroundColor: colors.primary, alignItems: 'center', justifyContent: 'center', paddingHorizontal: 16, shadowColor: '#006666', shadowOpacity: 0.22, shadowRadius: 12, shadowOffset: { width: 0, height: 4 }, elevation: 4 };
 const submitTxt = { fontFamily: font.bold, fontSize: 15, color: '#fff' };
 const outlineBtn = { minHeight: 50, borderRadius: radius.md, borderWidth: 1, borderColor: colors.border, alignItems: 'center', justifyContent: 'center' };
 const outlineTxt = { fontFamily: font.semibold, fontSize: 14, color: colors.ink };

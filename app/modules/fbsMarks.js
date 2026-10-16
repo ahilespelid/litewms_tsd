@@ -3,6 +3,7 @@ import { View, Text, ScrollView, Pressable, TextInput, Modal, Image, ActivityInd
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import ScreenHeader from '../../components/ScreenHeader';
 import ScanField from '../../components/ScanField';
+import MarketPills from '../../components/MarketPills';
 import { api } from '../../lib/api';
 import { speak, formatCellSpeech, getCellVoiceMode } from '../../lib/cells';
 import { useScanDedup } from '../../lib/scanner';
@@ -375,17 +376,14 @@ export default function FbsMarksScreen({ market = 'ozon', onMarket }) {
   return (
     <View style={{ flex: 1, backgroundColor: colors.bg }}>
       <ScreenHeader title={headerTitle} onBack={goBack}
-        right={<Pressable onPress={refresh} hitSlop={8} style={{ width: 38, height: 38, borderRadius: 19, backgroundColor: '#ffffff22', alignItems: 'center', justifyContent: 'center' }}>{loading ? <ActivityIndicator color={colors.onDark} size="small" /> : <Text style={{ color: colors.onDark, fontSize: 18 }}>↻</Text>}</Pressable>} />
+        right={step === 'companies'
+          ? <MarketPills market={market} onMarket={onMarket} />
+          : <Pressable onPress={refresh} hitSlop={8} style={{ width: 38, height: 38, borderRadius: 19, backgroundColor: '#ffffff22', alignItems: 'center', justifyContent: 'center' }}>{loading ? <ActivityIndicator color={colors.onDark} size="small" /> : <Text style={{ color: colors.onDark, fontSize: 18 }}>↻</Text>}</Pressable>} />
 
       {error ? <View style={{ paddingHorizontal: 12, paddingTop: 8 }}><Banner kind="error" text={error} /></View> : null}
 
       {step === 'companies' ? (
         <ScrollView contentContainerStyle={{ padding: 12, paddingBottom: insets.bottom + 24, gap: 8 }}>
-          <View style={segWrap}>
-            <Pressable style={segBtn} onPress={() => onMarket && onMarket('wb')}><Text style={segTxt}>WB</Text></Pressable>
-            <Pressable style={[segBtn, market === 'ozon' && segOn]} onPress={() => onMarket && onMarket('ozon')}><Text style={[segTxt, market === 'ozon' && segTxtOn]}>Ozon</Text></Pressable>
-            <Pressable style={[segBtn, market === 'yandex' && segOn]} onPress={() => onMarket && onMarket('yandex')}><Text style={[segTxt, market === 'yandex' && segTxtOn]}>Яндекс</Text></Pressable>
-          </View>
           <TextInput value={companyQuery} onChangeText={setCompanyQuery} placeholder="Поиск по имени…" placeholderTextColor={colors.muted} style={fieldStyle} />
           {filteredCompanies.map((c) => (
             <Pressable key={c.id} onPress={() => openCompany(c)} style={[rowCard, shadow.card]}>
@@ -425,7 +423,7 @@ export default function FbsMarksScreen({ market = 'ozon', onMarket }) {
               {workSorted.map((o) => {
                 const done = orderDone(o); const shipped = o.shipState === 'shipped';
                 return (
-                  <Pressable key={o.posting.posting_number} onPress={() => selectOrder(o)} onLongPress={() => setDetail({ kind: 'order', o })} style={[planRow, (done || shipped) && { opacity: 0.6 }, current?.order === o && { borderColor: colors.primary }]}>
+                  <Pressable key={o.posting.posting_number} onPress={() => selectOrder(o)} onLongPress={() => setDetail({ kind: 'order', o })} style={[planRow, (done || shipped) && { backgroundColor: colors.successBg, borderColor: colors.successLine }, current?.order === o && { borderColor: colors.primary }]}>
                     <View style={{ flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 4 }}>
                       <Text style={{ fontFamily: font.bold, fontSize: 13, color: colors.ink }} numberOfLines={1}>{o.posting.posting_number}</Text>
                       <Text style={{ fontFamily: font.semibold, fontSize: 12, color: done ? colors.success : colors.muted }}>{orderScanned(o)}/{orderNeed(o)}</Text>
@@ -457,7 +455,7 @@ export default function FbsMarksScreen({ market = 'ozon', onMarket }) {
               {errorLog.length ? <Text style={{ fontFamily: font.medium, fontSize: 12, color: colors.danger }}>{errorLog[0].text}</Text> : null}
               {nextPick ? <View style={{ backgroundColor: colors.accent + '18', borderRadius: radius.md, padding: 10 }}><Text style={{ fontFamily: font.semibold, fontSize: 13, color: colors.primary }}>Дальше: {nextPick.name} {nextPick.cellCode ? `· ${firstCellLabel(nextPick.cellsText)}` : ''} ×{nextPick.need}</Text></View> : null}
               {pickList.map((e) => { const picked = !!otborDoneRef.current[e.key]; return (
-                <View key={e.key} style={[planRow, picked && { opacity: 0.55 }]}>
+                <View key={e.key} style={[planRow, picked && { backgroundColor: colors.successBg, borderColor: colors.successLine }]}>
                   <View style={{ flexDirection: 'row', gap: 10, alignItems: 'center' }}>
                     {photoOf(e.item) ? <Pressable onPress={() => setLightbox({ src: photoOf(e.item), name: e.name })}><Image source={{ uri: photoOf(e.item) }} style={thumb} /></Pressable> : null}
                     <View style={{ flex: 1 }}><Text style={{ fontFamily: font.semibold, fontSize: 13, color: colors.ink }} numberOfLines={2}>{e.name || '—'}</Text><Text style={{ fontFamily: font.regular, fontSize: 12, color: colors.muted }}>{e.cellsText ? `📍 ${e.cellsText}` : 'нет ячейки'} · ×{e.need}</Text></View>
@@ -520,10 +518,10 @@ export default function FbsMarksScreen({ market = 'ozon', onMarket }) {
 function TargetCard({ current, face, setFace, cellsLoading, onPhoto, phase, label }) {
   const row = current.row; const cells = row.cells;
   return (
-    <View style={{ backgroundColor: colors.surface, borderWidth: 2, borderColor: phase === 'kiz' ? colors.accent : colors.primary, borderRadius: radius.lg, padding: 12, flexDirection: 'row', gap: 12 }}>
-      <Pressable onPress={() => setFace(face === 'cell' ? 'photo' : 'cell')} style={{ width: 92, height: 92, borderRadius: radius.md, backgroundColor: colors.bg, alignItems: 'center', justifyContent: 'center', overflow: 'hidden' }}>
+    <View style={{ backgroundColor: colors.surface, borderWidth: 2, borderColor: phase === 'kiz' ? colors.cz : colors.primary, borderRadius: radius.lg, padding: 12, flexDirection: 'row', gap: 12 }}>
+      <Pressable onPress={() => setFace(face === 'cell' ? 'photo' : 'cell')} style={{ width: 92, height: 92, borderRadius: radius.md, backgroundColor: phase === 'kiz' ? colors.czBg : colors.primaryLight, alignItems: 'center', justifyContent: 'center', overflow: 'hidden' }}>
         {face === 'photo' ? (photoOf(row.item) ? <Image source={{ uri: photoOf(row.item) }} style={{ width: '100%', height: '100%' }} /> : <Text style={{ fontFamily: font.regular, fontSize: 11, color: colors.muted }}>нет фото</Text>)
-          : cells ? (<><Text style={{ fontFamily: font.medium, fontSize: 9, color: colors.muted }}>СТЕЛЛАЖ</Text><Text style={{ fontFamily: font.bold, fontSize: 34, color: colors.primary }}>{cellRack(cells)}</Text>{cellNums(cells) ? <Text style={{ fontFamily: font.semibold, fontSize: 12, color: colors.ink }}>{cellNums(cells)}</Text> : null}{cellQty(cells) ? <Text style={{ fontFamily: font.regular, fontSize: 11, color: colors.muted }}>×{cellQty(cells)}</Text> : null}</>)
+          : cells ? (<><Text style={{ fontFamily: font.medium, fontSize: 9, color: colors.muted }}>СТЕЛЛАЖ</Text><Text style={{ fontFamily: font.bold, fontSize: 34, color: phase === 'kiz' ? colors.cz : colors.primary }}>{cellRack(cells)}</Text>{cellNums(cells) ? <Text style={{ fontFamily: font.semibold, fontSize: 12, color: colors.ink }}>{cellNums(cells)}</Text> : null}{cellQty(cells) ? <Text style={{ fontFamily: font.regular, fontSize: 11, color: colors.muted }}>×{cellQty(cells)}</Text> : null}</>)
             : (<><Text style={{ fontFamily: font.medium, fontSize: 9, color: colors.muted }}>{cellsLoading ? 'ИЩУ' : 'ЯЧЕЙКА'}</Text><Text style={{ fontFamily: font.bold, fontSize: 30, color: colors.muted }}>{cellsLoading ? '…' : '—'}</Text></>)}
       </Pressable>
       <View style={{ flex: 1 }}>
@@ -556,7 +554,7 @@ const segTxt = { fontFamily: font.bold, fontSize: 12, color: colors.muted };
 const segTxtOn = { color: colors.primary };
 const ghostBtn = { paddingHorizontal: 12, paddingVertical: 8, borderRadius: radius.sm, borderWidth: 1, borderColor: colors.border };
 const ghostBtnTxt = { fontFamily: font.semibold, fontSize: 12, color: colors.muted };
-const submitBtn = { minHeight: 48, borderRadius: radius.md, backgroundColor: colors.primary, alignItems: 'center', justifyContent: 'center', paddingHorizontal: 16 };
+const submitBtn = { minHeight: 48, borderRadius: radius.md, backgroundColor: colors.primary, alignItems: 'center', justifyContent: 'center', paddingHorizontal: 16, shadowColor: '#006666', shadowOpacity: 0.22, shadowRadius: 12, shadowOffset: { width: 0, height: 4 }, elevation: 4 };
 const submitTxt = { fontFamily: font.bold, fontSize: 15, color: '#fff' };
 const outlineBtn = { minHeight: 48, borderRadius: radius.md, borderWidth: 1, borderColor: colors.border, alignItems: 'center', justifyContent: 'center', paddingHorizontal: 16 };
 const outlineTxt = { fontFamily: font.semibold, fontSize: 14, color: colors.ink };

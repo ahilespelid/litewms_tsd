@@ -52,9 +52,7 @@ export default function Home() {
       <FlatList
         data={modules}
         keyExtractor={(i) => i.key}
-        numColumns={2}
-        columnWrapperStyle={{ gap: 12 }}
-        contentContainerStyle={{ padding: 16, gap: 12, paddingBottom: insets.bottom + 24 }}
+        contentContainerStyle={{ padding: 16, gap: 10, paddingBottom: insets.bottom + 24 }}
         ListHeaderComponent={
           <Text style={{ fontFamily: font.medium, fontSize: 13, color: colors.muted, marginBottom: 12 }}>
             Выберите операцию
